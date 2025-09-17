@@ -1,0 +1,128 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Register Employee - Attendance System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-user-plus"></i> Register Employee</h1>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Employee Registration Form</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="registrationForm">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Position</label>
+                        <input type="text" class="form-control" id="position" name="position" required>
+                    </div>
+                    
+                    <!-- Face Capture Section -->
+                    <div class="mb-4">
+                        <label class="form-label">Face Capture</label>
+                        <div class="text-center">
+                            <video id="video" width="400" height="300" autoplay style="border: 2px solid #ddd; border-radius: 8px;"></video>
+                            <canvas id="canvas" width="400" height="300" style="display: none;"></canvas>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="button" class="btn btn-primary" id="captureBtn">
+                                <i class="fas fa-camera"></i> Capture Face
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="retakeBtn" style="display: none;">
+                                <i class="fas fa-redo"></i> Retake
+                            </button>
+                        </div>
+                        <div id="captureStatus" class="text-center mt-2"></div>
+                        <input type="hidden" name="face_data" id="faceData">
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success" id="submitBtn" disabled>
+                            <i class="fas fa-save"></i> Register Employee
+                        </button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let video = document.getElementById('video');
+let canvas = document.getElementById('canvas');
+let captureBtn = document.getElementById('captureBtn');
+let retakeBtn = document.getElementById('retakeBtn');
+let submitBtn = document.getElementById('submitBtn');
+let faceDataInput = document.getElementById('faceData');
+let captureStatus = document.getElementById('captureStatus');
+
+// Start camera
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function(stream) {
+        video.srcObject = stream;
+    })
+    .catch(function(err) {
+        console.log("An error occurred: " + err);
+        captureStatus.innerHTML = '<div class="alert alert-danger">Camera access denied</div>';
+    });
+
+// Capture face
+captureBtn.addEventListener('click', function() {
+    let context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, 400, 300);
+    
+    // Convert to base64
+    let dataURL = canvas.toDataURL('image/jpeg');
+    faceDataInput.value = dataURL;
+    
+    // Show captured image
+    video.style.display = 'none';
+    canvas.style.display = 'block';
+    
+    // Update buttons
+    captureBtn.style.display = 'none';
+    retakeBtn.style.display = 'inline-block';
+    submitBtn.disabled = false;
+    
+    captureStatus.innerHTML = '<div class="alert alert-success">Face captured successfully!</div>';
+});
+
+// Retake photo
+retakeBtn.addEventListener('click', function() {
+    video.style.display = 'block';
+    canvas.style.display = 'none';
+    
+    captureBtn.style.display = 'inline-block';
+    retakeBtn.style.display = 'none';
+    submitBtn.disabled = true;
+    
+    faceDataInput.value = '';
+    captureStatus.innerHTML = '';
+});
+</script>
+{% endblock %}

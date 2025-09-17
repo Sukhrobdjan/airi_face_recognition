@@ -1,0 +1,147 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Dashboard - Attendance System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_employees }}</h4>
+                        <small>Total Employees</small>
+                    </div>
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ today_checkins }}</h4>
+                        <small>Today's Check-ins</small>
+                    </div>
+                    <i class="fas fa-sign-in-alt fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ today_checkouts }}</h4>
+                        <small>Today's Check-outs</small>
+                    </div>
+                    <i class="fas fa-sign-out-alt fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ employees.count }}</h4>
+                        <small>Active</small>
+                    </div>
+                    <i class="fas fa-user-check fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-users"></i> Employees</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                            <tr>
+                                <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+                                <td>{{ employee.position }}</td>
+                                <td>
+                                    {% if employee.face_encoding %}
+                                        <span class="badge bg-success">Trained</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Untrained</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No employees registered</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock"></i> Recent Attendance</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Type</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in recent_attendance %}
+                            <tr>
+                                <td>{{ record.employee.first_name }} {{ record.employee.last_name }}</td>
+                                <td>
+                                    {% if record.attendance_type == 'IN' %}
+                                        <span class="badge bg-success">Check In</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Check Out</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ record.timestamp|date:"H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No attendance records</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

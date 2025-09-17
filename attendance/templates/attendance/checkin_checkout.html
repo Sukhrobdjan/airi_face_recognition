@@ -1,0 +1,124 @@
+{% extends 'attendance/base.html' %}
+
+{% block title %}Check In/Out - Attendance System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="fas fa-clock"></i> Check In / Check Out</h1>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header text-center">
+                <h5>Face Recognition Attendance</h5>
+                <small class="text-muted">Position your face in front of the camera and click the appropriate button</small>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <video id="video" width="400" height="300" autoplay style="border: 2px solid #ddd; border-radius: 8px;"></video>
+                    <canvas id="canvas" width="400" height="300" style="display: none;"></canvas>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-success btn-lg w-100" id="checkinBtn">
+                            <i class="fas fa-sign-in-alt"></i><br>
+                            Check In
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-danger btn-lg w-100" id="checkoutBtn">
+                            <i class="fas fa-sign-out-alt"></i><br>
+                            Check Out
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="result" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let video = document.getElementById('video');
+let canvas = document.getElementById('canvas');
+let checkinBtn = document.getElementById('checkinBtn');
+let checkoutBtn = document.getElementById('checkoutBtn');
+let result = document.getElementById('result');
+
+// Start camera
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function(stream) {
+        video.srcObject = stream;
+    })
+    .catch(function(err) {
+        console.log("An error occurred: " + err);
+        result.innerHTML = '<div class="alert alert-danger">Camera access denied</div>';
+    });
+
+function processAttendance(action) {
+    // Capture current frame
+    let context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, 400, 300);
+    let dataURL = canvas.toDataURL('image/jpeg');
+    
+    // Show loading
+    result.innerHTML = '<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Processing...</div>';
+    
+    // Send to server
+    fetch('{% url "checkin_checkout" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: `action=${action}&face_data=${encodeURIComponent(dataURL)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            result.innerHTML = `
+                <div class="alert alert-success">
+                    <h6><i class="fas fa-check-circle"></i> Success!</h6>
+                    <p><strong>${data.employee}</strong> ${data.message}</p>
+                    <small>Confidence: ${data.confidence}</small>
+                </div>
+            `;
+        } else {
+            result.innerHTML = `
+                <div class="alert alert-danger">
+                    <h6><i class="fas fa-exclamation-circle"></i> Failed</h6>
+                    <p>${data.message}</p>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        result.innerHTML = `
+            <div class="alert alert-danger">
+                <h6><i class="fas fa-exclamation-circle"></i> Error</h6>
+                <p>Network error occurred</p>
+            </div>
+        `;
+    });
+}
+
+checkinBtn.addEventListener('click', () => processAttendance('checkin'));
+checkoutBtn.addEventListener('click', () => processAttendance('checkout'));
+
+// Add CSRF token to page
+if (!document.querySelector('[name=csrfmiddlewaretoken]')) {
+    let csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = '{{ csrf_token }}';
+    document.body.appendChild(csrfInput);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train System - Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        .progress {
+            height: 25px;
+        }
+        .progress-bar {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        h1 {
+            color: #495057;
+            font-weight: 600;
+        }
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            border: none;
+            font-weight: 600;
+        }
+        .btn-success:hover {
+            background: linear-gradient(45deg, #218838, #1ea085);
+            transform: translateY(-1px);
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+        }
+        .stats-card {
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1><i class="fas fa-brain text-primary me-2"></i> Train Face Recognition System</h1>
+            </div>
+        </div>
+
+        <!-- Statistics and Training Section -->
+        <div class="row mb-4">
+            <!-- Training Statistics -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Training Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center mb-3">
+                            <div class="col-4">
+                                <div class="card bg-primary text-white stats-card">
+                                    <div class="card-body">
+                                        <h3>25</h3>
+                                        <small>Total Employees</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card bg-success text-white stats-card">
+                                    <div class="card-body">
+                                        <h3>18</h3>
+                                        <small>Trained</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="card bg-warning text-white stats-card">
+                                    <div class="card-body">
+                                        <h3>7</h3>
+                                        <small>Untrained</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div class="progress">
+                            <div class="progress-bar bg-success" 
+                                 role="progressbar" 
+                                 style="width: 72%" 
+                                 aria-valuenow="72" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                72.0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Train System -->
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>Train System</h5>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p class="flex-grow-1">Training the system will load all employee face encodings into memory for faster recognition.</p>
+                        
+                        <form method="post" class="mb-3">
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="fas fa-brain me-2"></i> Train System
+                            </button>
+                        </form>
+                        
+                        <div class="mt-auto">
+                            <small class="text-muted">
+                                <strong>Note:</strong> Training is automatically performed when employees are registered,
+                                but you can manually retrain the system here if needed.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Tips -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Training Tips</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h6><i class="fas fa-camera text-primary me-2"></i> Photo Quality</h6>
+                                <ul class="small list-unstyled">
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Ensure good lighting</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Face should be clearly visible</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Avoid shadows on face</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Look directly at camera</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h6><i class="fas fa-user text-success me-2"></i> Face Position</h6>
+                                <ul class="small list-unstyled">
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Center face in frame</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Maintain neutral expression</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Remove glasses if possible</li>
+                                    <li class="mb-1"><i class="fas fa-check text-success me-2"></i>Keep face straight</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4">
+                                <h6><i class="fas fa-cog text-warning me-2"></i> System Performance</h6>
+                                <ul class="small list-unstyled">
+                                    <li class="mb-1"><i class="fas fa-chart-line text-info me-2"></i>More training data = better accuracy</li>
+                                    <li class="mb-1"><i class="fas fa-sync text-info me-2"></i>Retrain after adding employees</li>
+                                    <li class="mb-1"><i class="fas fa-eye text-info me-2"></i>Monitor recognition confidence</li>
+                                    <li class="mb-1"><i class="fas fa-calendar text-info me-2"></i>Update photos periodically</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bar on load
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.width = '0%';
+                setTimeout(() => {
+                    progressBar.style.transition = 'width 2s ease-in-out';
+                    progressBar.style.width = '72%';
+                }, 500);
+            }
+
+            // Add click effect to train button
+            const trainButton = document.querySelector('.btn-success');
+            trainButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Training...';
+                this.disabled = true;
+                
+                // Simulate training process
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-check me-2"></i> Training Complete!';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-primary');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-success');
+                        this.disabled = false;
+                    }, 2000);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
